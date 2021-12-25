@@ -1,0 +1,7 @@
+<h4>Please enter your question below:</h4>
+
+<form action="/answer" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit">
+</form>
