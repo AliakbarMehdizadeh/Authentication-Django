@@ -1,11 +1,11 @@
-from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from .forms import NewUserForm
 from .forms import NewQuestion
 from django.contrib import messages
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
-from googlesearch import search
+from django.contrib.auth.models import User
+from .models import UserQuestion
 
 
 # Create your views here.
@@ -47,24 +47,22 @@ def login_request(request):
 
 def get_question(request):
     # if this is a POST request we need to process the form data
-    if request.method == 'POST':
+    if request.method == "POST":
         # create a form instance and populate it with data from the request:
         form = NewQuestion(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+            obj = form.save(commit=False)  # Return an object without saving to the DB
+            obj.author = User.objects.get(pk=request.user.id)  # Add an author field
+            obj.save()
+            return redirect("myapp:answer")
 
     # if a GET (or any other method) we'll create a blank form
     else:
         form = NewQuestion()
-
-    return render(request, template_name='myapp/question.html', context={'form': form})
+    return render(request=request, template_name='myapp/question.html', context={'form': form})
 
 
 def post_answer(request):
-
-    res = search("Google", num_results=1)[2]
-    return render(request=request, template_name="myapp/answer.html", context={'response': res} )
+    questions = UserQuestion.objects.all()
+    return render(request=request, template_name="myapp/answer.html", context={'questions': questions})

@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import ModelForm
+from .models import UserQuestion
+from django.db import models
+from django.conf import settings
 
 
 # Create your forms here.
@@ -20,5 +22,9 @@ class NewUserForm(UserCreationForm):
         return user
 
 
-class NewQuestion(forms.Form):
-    your_question = forms.CharField(label='Your-question', max_length=500)
+class NewQuestion(forms.ModelForm):
+    question = forms.CharField(max_length=1000)
+
+    class Meta:
+        model = UserQuestion
+        fields = ('question',)

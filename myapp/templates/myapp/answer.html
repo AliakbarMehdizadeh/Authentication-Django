@@ -1,5 +1,9 @@
-<h4>Please find your answer below:</h4>
+<h2>Dear {{user.username}},</h2>
+<p>Your Question has been successfully submitted!</p>
+<p>You can take a look at other questions below:</p><br>
 
-<p><a href={{response}}> Check It Out!</a></p>
-{{response}}
-<h1></h1>
+<div class="container">
+{% for q in questions%}
+        <p>"<b>{{q.author}}</b>" has asked: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"{{ q.question }}"</p>
+</div>
+{% endfor %}
